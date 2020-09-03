@@ -15,6 +15,10 @@
   <script src="https://cdn.bootcdn.net/ajax/libs/codemirror/5.56.0/addon/edit/matchbrackets.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/codemirror/5.56.0/addon/selection/active-line.min.js"></script>
 
+  <script src="brython.js"></script>
+  <script src="brython_stdlib.js"></script>
+  <script src="minidecaf.brython.js"></script>
+
   <style>
 .CodeMirror {
     height: 100%;
@@ -52,16 +56,20 @@ int main() {
 }
 `;
 
+var inputCM;
+var outputCM;
+
 $(document).ready(function () {
-  CodeMirror(document.getElementById("minidecaf-input"), {
+  inputCM = CodeMirror(document.getElementById("minidecaf-input"), {
     lineNumbers: true,
     indentUnit: 4,
     matchBrackets: true,
     styleActiveLine: true,
     mode: "text/x-csrc",
-  }).setValue(EXAMPLE_CODE);
+  });
+  inputCM.setValue(EXAMPLE_CODE);
 
-  CodeMirror(document.getElementById("minidecaf-ir"), {
+  outputCM = CodeMirror(document.getElementById("minidecaf-output"), {
     lineNumbers: true,
     indentUnit: 4,
     styleActiveLine: true,
@@ -79,12 +87,12 @@ $(document).ready(function () {
         <h3>Stages:</h3>
       </div>
       <div class="col-11 btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-secondary" id="btnLex">lex</button>
-        <button type="button" class="btn btn-secondary" id="btnParse">parse</button>
-        <button type="button" class="btn btn-secondary" id="btnNI">name</button>
-        <button type="button" class="btn btn-secondary" id="btnTI">type</button>
-        <button type="button" class="btn btn-secondary" id="btnIR">ir</button>
-        <button type="button" class="btn btn-secondary" id="btnAsm">asm</button>
+        <button type="button" class="btn btn-secondary" id="btnlex">lex</button>
+        <button type="button" class="btn btn-secondary" id="btnparse">parse</button>
+        <button type="button" class="btn btn-secondary" id="btnni">name</button>
+        <button type="button" class="btn btn-secondary" id="btnti">type</button>
+        <button type="button" class="btn btn-secondary" id="btnir">ir</button>
+        <button type="button" class="btn btn-secondary" id="btnasm">asm</button>
       </div>
     </div>
 
@@ -93,10 +101,34 @@ $(document).ready(function () {
         <div class="col-12 p-0 h-100" id="minidecaf-input"></div>
       </div>
       <div class="col-sm-6 p-0 h-100">
-        <div class="col-12 p-0 h-100" id="minidecaf-ir"></div>
+        <div class="col-12 p-0 h-100" id="minidecaf-output"></div>
       </div>
     </div>
 
   </div>
+
+
+    <script type="text/python">
+    from browser import document, window
+    from minidecaf import webmain
+
+    def run(stage):
+        input = window.inputCM.getValue()
+        output = webmain(stage, input)
+        window.outputCM.setValue(output)
+
+    def lex(e): run("lex")
+    document["btnlex"].bind("click", lex)
+    def parse(e): run("parse")
+    document["btnparse"].bind("click", parse)
+    def ni(e): run("ni")
+    document["btnni"].bind("click", ni)
+    def ti(e): run("ti")
+    document["btnti"].bind("click", ti)
+    def ir(e): run("ir")
+    document["btnir"].bind("click", ir)
+    def asm(e): run("asm")
+    document["btnasm"].bind("click", asm)
+    </script>
 
 </body>
