@@ -90,7 +90,7 @@ $(document).ready(function () {
         <button type="button" class="btn btn-secondary" id="btnlex">lex</button>
         <button type="button" class="btn btn-secondary" id="btnparse">parse</button>
         <button type="button" class="btn btn-secondary" id="btnni">name</button>
-        <button type="button" class="btn btn-secondary" id="btnti">type</button>
+        <button type="button" class="btn btn-secondary" id="btnty">type</button>
         <button type="button" class="btn btn-secondary" id="btnir">ir</button>
         <button type="button" class="btn btn-secondary" id="btnasm">asm</button>
       </div>
@@ -110,12 +110,15 @@ $(document).ready(function () {
 
     <script type="text/python">
     from browser import document, window
-    from minidecaf import webmain
+    from minidecaf import main as md_main
+    from minidecaf.webutils import *
 
     def run(stage):
         input = window.inputCM.getValue()
-        output = webmain(stage, input)
-        window.outputCM.setValue(output)
+        with MockStdout() as stdout, MockStderr() as stderr:
+            md_main(MockArgs(stage, input))
+            out, err = (stdout.text, stderr.text)
+        window.outputCM.setValue(out)
 
     def lex(e): run("lex")
     document["btnlex"].bind("click", lex)
@@ -123,8 +126,8 @@ $(document).ready(function () {
     document["btnparse"].bind("click", parse)
     def ni(e): run("ni")
     document["btnni"].bind("click", ni)
-    def ti(e): run("ti")
-    document["btnti"].bind("click", ti)
+    def ty(e): run("ty")
+    document["btnty"].bind("click", ty)
     def ir(e): run("ir")
     document["btnir"].bind("click", ir)
     def asm(e): run("asm")
