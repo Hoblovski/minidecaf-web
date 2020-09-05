@@ -21,12 +21,20 @@
 
   <style>
 .CodeMirror {
-    height: 100%;
-    font-size: large;
+  height: 100%;
+  font-size: large;
 }
 
 #minidecaf-input {
+  height: calc(100vh - 8rem);
   border-right: 1px dotted grey;
+  border-bottom: 1px dotted grey;
+}
+
+#minidecaf-message {
+  padding: 10px;
+  font-size: larger;
+  font-family: Courier;
 }
   </style>
 
@@ -98,7 +106,12 @@ $(document).ready(function () {
 
     <div class="row">
       <div class="col-sm-6 p-0 h-100">
-        <div class="col-12 p-0 h-100" id="minidecaf-input"></div>
+        <div class="col-12 p-0 h-90" id="minidecaf-input"></div>
+        <div class="col-12 p-0 h-10" id="minidecaf-message">
+          Please be patient.<br>
+          Page load could take 10~20 seconds.<br>
+          Compilation could take 5~10 seconds.
+        </div>
       </div>
       <div class="col-sm-6 p-0 h-100">
         <div class="col-12 p-0 h-100" id="minidecaf-output"></div>
@@ -114,11 +127,14 @@ $(document).ready(function () {
     from minidecaf.webutils import *
 
     def run(stage):
+        document["minidecaf-message"].text = ""
         input = window.inputCM.getValue()
         with MockStdout() as stdout, MockStderr() as stderr:
             md_main(MockArgs(stage, input))
             out, err = (stdout.text, stderr.text)
         window.outputCM.setValue(out)
+        if len(err.strip()) != 0:
+            document["minidecaf-message"].text = err
 
     def lex(e): run("lex")
     document["btnlex"].bind("click", lex)
