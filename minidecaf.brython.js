@@ -1,3 +1,0 @@
-__BRYTHON__.use_VFS = true;
-var scripts = {"$timestamp": 1599152266283, "minidecaf": [".py", "import sys\nfrom .main import main\n\ndef webmain(stage,input):\n class MockStdout:\n  def __init__(self):\n   self.text=\"\"\n  def __enter__(self):\n   self._stdout=sys.stdout\n   sys.stdout=self\n   return self\n  def write(self,s):\n   self.text +=s\n  def __exit__(self,_a,_b,_c):\n   sys.stdout=self._stdout\n   \n with MockStdout()as s:\n  main(stage,input)\n  return s.text\n  \n", ["minidecaf.main", "sys"], 1], "minidecaf.main": [".py", "def main(stage,input):\n print(\">>\"+input+\"<<\\n====\"+stage)\n", []]}
-__BRYTHON__.update_VFS(scripts)
