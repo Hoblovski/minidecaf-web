@@ -1,0 +1,2 @@
+#!/bin/bash
+rm Lib/site-packages/minidecaf/*.g4
